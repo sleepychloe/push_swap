@@ -1,0 +1,465 @@
+main
+	<parsing>
+	- if argc is 1(there's no argument), return (0).
+	- counts the number of the input using ft_count_len().
+	- makes stacks and put the value of the input inside stack a
+	  using init_stack().
+	- checks if the input has duplicate number using check_duplicate().
+	<sorting>
+	- i'll use different way to sort the stack
+	  when the input is descending order(len >= 2 && ft_is_descend())
+	  and other cases(len >= 3 && !ft_is_ascend() -> the reason why len >= 3
+	  : when the number is 2 and if it is not descending order,
+	  it is already sorted)
+	  using ft_is_descend(), ft_is_ascend(), reverse_stack_a(), and sort_by_len().
+	- when the stack a is already sorted, it doens't go inside the if or else if.
+
+********** parsing **********
+
+ft_count_len()
+	- counts the number of the input.
+	- if the input is <<./a.out 9 2 "2 -2 0" 3 1>>, the length is 7.
+
+init_stack()
+	- initalizes the stack a and b to NULL.
+	- changes the value of the input to int using ft_modified_atoi()
+	- makes new nodes with each argument and appends them to stack a
+	  using create_new_node() and append_new_node()
+
+ft_modified_atoi()
+	- changes the value of the input to char to int(applies to each arg).
+	- the logic is same as ft_atoi() in libft but this is simpler.
+	- error msg will be printed
+	  when the input number is less than INT_MIN or bigger than INT_MAX.
+
+create_new_node()
+	- allocates memory(for each node).
+	- data is the result of ft_modified_atoi()(each arg that changed to int).
+	- prev and next is the node itself.
+	  (in case of the node is the head of the list)
+
+append_new_node()
+	- if the stack a is empty, new node becomes a head of the list.
+	- else, we need to change the prev and next.
+	- next address of the last node becomes new node.
+	- prev address of the new node becomes the last node of the origin list.
+	- prev address of the head becomes new node.
+	- next address of the new node becomes the head of the origin list.
+
+check_duplicate()
+	- checks if data of the head in the stack a has same data with others.
+	  (if the datas of stack a are "1, 2, 3, 4, 5, 6",
+	  compare 1 with 2, 3, 4, 5, 6
+	  //in this case, a->data is 1, curr->data is 2 and then 3, ...)
+	- checks if data of the next of the head in the stack a
+	  has same data with others.
+	  (if the datas of stack a are "1, 2, 3, 4, 5, 6",
+	  compares 2 with 3, 4, 5, 6)
+	- check if any data has same data with others.
+	  (if the datas of stack a are "1, 2, 3, 4, 5, 6", compare 3 with 4, 5, 6
+	  and then compare 4 with 5,6
+	  and then compare 5 with 6)
+	- error msg will be printed when a->data and curr->data is same
+
+********** operating **********
+
+ft_operation_s()
+	- checks if i can swap the first 2 elements at the top of the stack.
+	- ft_operation_s() is for conducting "sa", "sb", and "ss".
+
+ft_operation_p()
+	- checks if i can take the first element at the top of source stack
+	  (using ft_take_node()), and put it at the top of destination stack.
+	- ft_operation_p() is for conducting "pa", and "pb".
+	- if the destination stack is empty, taken_node that have already taken
+	  from source becomes a head of the destination list.
+	- else, we need to change the prev and next.
+		* next address of the last node becomes taken_node.
+		* prev address of the taken_node becomes the last node of the origin list.
+		* prev address of the head becomes taken_node.
+		* next address of the taken_node becomes the head of the origin list.
+	- and then taken_node becomes the head of the destination stack.
+
+ft_take_node()
+	- checks if i can take the first element at the top of source stack.
+	- the node i should take from the source stack is a head of the source stack.
+	- if the next address of head of the source stack is the head itself,
+	  it means the source stack had only 1 node and it will be empty
+	  after i take the node.
+	- when the source stack had more than 1 node, i need to change the prev and next.
+		* next address of the last node becomes the next node of head.
+		* prev address of the next node of head becomes the last node.
+		* the next of the head of the origin stack becomes a new head of source stack.
+	- after changing the prev and next,
+	  set the next and prev of the taken node to itself.
+	  (in case of the destination stack is empty)
+
+ft_operation_r()
+	- checks if i can shift up all elements of stack by 1.
+	- ft_operation_r() is for conducting "ra", "rb", and "rr".
+
+ft_operation_rr()
+	- checks if i can shift down all elements of stack by 1.
+	- ft_operation_rr() is for conducting "rra", "rrb", and "rrr".
+
+ft_do_operation()
+	- prints each step to sort the stack.
+	- print "sa" : when the string is "sa",
+				and when i can swap the first 2 elements at the top of the stack a.
+	- print "sb" : when the string is "sb",
+				and when i can swap the first 2 elements at the top of the stack b.
+	- print "ss" : when the string is "ss",
+				and when i can swap the first 2 elements at the top of the stack a, b.
+	- print "pa" : when the string is "pa",
+				and 
+	- print "pb" : when the string is "pb",
+				and 
+	- print "ra" : when the string is "ra",
+				and when i can shift up all elements of stack a by 1.
+	- print "rb" : when the string is "rb",
+				and when i can shift up all elements of stack b by 1.
+	- print "rr" : when the string is "rr",
+				and when i can shift up all elements of stack a, b by 1.
+	- print "rra" : when the string is "rra",
+				and when i can shift down all elements of stack a by 1.
+	- print "rrb" : when the string is "rrb",
+				and when i can shift down all elements of stack b by 1.
+	- print "rrr" : when the string is "rrr",
+				and when i can shift down all elements of stack a, b by 1.
+
+********** sorting **********
+
+ft_is_descend()
+	- checks if datas of stack a are descending order.
+	  (if the datas of stack a are "5, 4, 3, 2, 1",
+	  the function checks if 5 is bigger than 4, if 4 is bigger than 3,
+	  ..., if 2 is bigger than 1)
+
+reverse_stack()
+	- reverses the stack a.
+	- when the number of input is 2 and it is descending order, do "sa".
+	  (for example, if the input is "2, 1",
+	  i just need to change the order of stack a using "sa")
+		  a  |  b		  a  |  b
+		-----------	sa	-----------
+		  2  |		->	  1  |
+		  1  |			  2  |
+	- when the number of input is 3, and it is descending order,
+	  do "sa" and "rra".
+	  (for example, if the input is "3, 2, 1",
+	  i'll do "sa" first to change the order of 3 and 2,
+	  and then do "rra" to put 1 to the top of the stack a)
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  3  |		sa	  2  |		rra	  1  |
+		  2  |		->	  3  |		->	  2  |
+		  1  |			  1  |			  3  |
+	- when the number of input is more than 3, do "pb" for (len - 1)times,
+	  and then do "pa" and "ra" until stack b is empty.
+	  (for example, if the example is "6, 5, 4, 3, 2, 1",
+	  i'll do "pb" 5 times so that stack a has only a.
+	  and then do "pa" and "ra" one by one until b is empty)
+		  a  |  b		  a  |  b
+		-----------		-----------
+		  6  |			  1  |  2
+		  5  |			     |  3
+		  4  |		sa*5	     |  4
+		  3  |		->	     |  5
+		  2  |			     |  6
+		  1  |
+	  ********************************************************************
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  2		  2  |  3		  1  |  3
+		     |  3	pa	  1  |  4	ra	  2  |  4
+		     |  4	->	     |  5	->	     |  5
+		     |  5		     |  6		     |  6
+		     |  6		
+	  ********************************************************************
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  3		  3  |  4		  1  |  4
+		  2  |  4	pa	  1  |  5	ra	  2  |  5
+		     |  5	->	  2  |  6	->	  3  |  6
+		     |  6		
+	  ********************************************************************
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  4		  4  |  5  		  1  |  5
+		  2  |  5	pa	  1  |  6	ra	  2  |  6
+		  3  |  6	->	  2  |		->	  3  |
+					  3  |			  4  |
+	  ********************************************************************
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  5		  5  |  6		  1  |  6
+		  2  |  6	pa	  1  |		ra	  2
+		  3  |		->	  2  |		->	  3
+		  4  |			  3  |			  4
+					  4  |			  5
+	  ********************************************************************
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  6		  6  |			  1  |
+		  2  |		pa	  1  |		ra	  2  |
+		  3  |		->	  2  |		->	  3  |
+		  4  |			  3  |			  4  |
+		  5  |			  4  |			  5  |
+					  5  |			  6  |
+ft_is_ascend()
+	- checks if datas of stack a are ascending order.
+	  (if the datas of stack a are "1, 2, 3, 4, 5",
+	  the function checks if 1 is less than 2, if 2 is less than 3,
+	  ..., if 4 is less than 5)
+
+sort()
+	- i'll use "quick sort" to sort the stack.
+	- if there are not that many numbers to sort
+	  or the numbers are descending order,
+	  it will take pretty long time to sort the stack using quick sort.
+	- that's why i decided to use different way to sort
+	  when the input numbers are descending order.
+	- with this reason, i'll use different way
+	  when the length of the input is 3, 4, or 5
+	  using sort_len_3(), sort_len_4(), and sort_len_5().
+	- when the length of the input is more than 5, go inside a_to_b().
+
+sort_len_3()
+	- sort the stack a when the input numbers are 3.
+	- since 3! = 6, the number of every case when the input numbers are 3 is 6.
+	- every case is,	[01] 1, 2, 3 -> ascending order(nothing to sort)
+						[02] 1, 3, 2
+						[03] 2, 1, 3
+						[04] 2, 3, 1
+						[05] 3, 1, 2
+						[06] 3, 2, 1 -> descending order(already sorted in the main)
+	- if the head of the stack a is the minimum number(using ft_min_data())
+	  in the input, do "sa" and "ra".
+	  (for example, if the input is "1, 3, 2", i'll do "sa" and "ra")
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |		sa	  3  |		ra	  1  |
+		  3  |		->	  1  |		->	  2  |
+		  2  |			  2  |			  3  |
+	- if the head of the stack a is the maximum number(using ft_max_data())
+	  in the input, do "ra".
+	  (for example, if the input is "3, 1, 2", i'll do "ra")
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  3  |		ra	  1  |
+		  1  |		->	  2  |
+		  2  |			  3  |
+	- if the second number of the input is the minimum number(using ft_min_data())
+	  in the input, do "sa".
+	  (for example, if the input is "2, 1, 3", i'll do "sa")
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  2  |		sa	  1  |
+		  1  |		->	  2  |
+		  3  |			  3  |
+	- if the second number of the input is the maximum number in the input,
+	  do "rra".
+	  (for example, if the input is "2, 3, 1", i'll do "rra")
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  2  |		rra	  1  |
+		  3  |		->	  2  |
+		  1  |			  3  |
+
+ft_min_data()
+	- finds out the minimum number of the input.
+	- let's say the min_data of the input is inside the head of the list.
+	- compare data of the head with the next data.
+	  if the next data of the head is less than the min_data,
+	  min_data will be changed to it.
+	- repeat until the end and return the min_data.
+
+ft_max_data()
+	- finds out the maximum number of the input.
+	- let's say the max_data of the input is inside the head of the list.
+	- compare data of the head with the next data.
+	  if the next data of the head is bigger than max_data,
+	  max_data will be changed to it.
+	- repeat until the end and return the max_data.
+
+sort_len_4()
+	- sort the stack a when the input numbers are 4.
+	- since 4! = 24, the number of every case when the input numbers are 4 is 24.
+	- every case is,	[01] 1, 2, 3, 4 -> ascending order(nothing to sort)
+						[02] 1, 2, 4, 3
+						[03] 1, 3, 2, 4
+						[04] 1, 3, 4, 2
+						[05] 1, 4, 2, 3
+						[06] 1, 4, 3, 2
+						[07] 2, 1, 3, 4
+						[08] 2, 1, 4, 3
+						[09] 2, 3, 1, 4
+						[10] 2, 3, 4, 1
+						[11] 2, 4, 1, 3
+						[12] 2, 4, 3, 1
+						[13] 3, 1, 2, 4
+						[14] 3, 1, 4, 2
+						[15] 3, 2, 1, 4
+						[16] 3, 2, 4, 1
+						[17] 3, 4, 1, 2
+						[18] 3, 4, 2, 1
+						[19] 4, 1, 2, 3
+						[20] 4, 1, 3, 2
+						[21] 4, 2, 1, 3
+						[22] 4, 2, 3, 1
+						[23] 4, 3, 1, 2
+						[24] 4, 3, 2, 1 -> descending order(already sorted in the main)
+	- i already mentioned that it'll take pretty much time to sort descending number
+	  using quick sort.
+	- so, the worst case to sort is when there are continuous 3 descending numbers.
+	([06] 1, 4, 3, 2, [12] 2, 4, 3, 1, [18] 3, 4, 2, 1, and [23] 4, 3, 1, 2)
+	- let's check one of the worst case [23] 4, 3, 1, 2 with other cases.
+	  if the first number of stack a is bigger than the second number,
+	  do "sa" and "pb", and if it's not, just do "pb".
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  4  |		sa	  3  |		pb	  4  |  3
+		  3  |		->	  4  |		->	  1  |
+		  1  |			  1  |			  2  |
+		  2  |			  2  |			
+	  after this, there are 3 numbers in the stack a, and 1 number in the stack b.
+	  i'll send to one more number from stack a to stack b so do this step again.
+	  if the first number of stack a is bigger than the second number,
+	  do "sa" and "pb", and if it's not, just do "pb".
+	  	  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  4  |  3	sa	  1  |  3	pb	  4  |  1
+		  1  |		->	  4  |		->	  2  |  3
+		  2  |			  2  |
+	  after this, there are 2 numbers in the stack a, and 2 numbers in the stack b.
+	  now, i'm gonna move the numbers in the stack b to a.
+	  before this, we need to make the numbers inside stack a to ascending order,
+	  and the numbers inside stack b to descending order.
+	  	* if the first number of stack a is bigger than the second one,
+	  	  and the first number of stack b is less than the second one,
+	 	  i need to do "sa" and "sb" at the same time. and it is same as doing "ss".
+	  	* if the first number of stack a is bigger than the second one,
+	  	  and the numbers inside stack b is descending order,
+		  i need to do "sa".
+		* if the numbers inside stack a is ascending order,
+		  and the first number of stack b is less than the second one,
+		  i need to do "sb".
+		  a  |  b		  a  |  b
+		-----------		-----------
+		  4  |  1	ss	  2  |  3
+		  2  |  3	->	  4  |  1
+	  i can move the numbers inside stack b to stack a.
+	  after this step, there are 3 numbers in the stack a, and 1 number in the stack b.
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  2  |  3	pa	  3  |  1
+		  4  |  1	->	  2  |
+						  4  |
+	  before moving one more number inside stack b to a,
+	  if the first number of stack a is bigger than the second one, do "sa".
+		  a  |  b		  a  |  b
+		-----------		-----------
+		  3  |  1	sa	  2  |  1
+		  2  |		->	  3  |
+		  4  |			  4  |
+	  now i can move the last one in the stack b to a by doing "pa".
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  2  |  1	pa	  1  |
+		  3  |		->	  2  |
+		  4  |			  3  |
+		  				  4  |
+	  if the first number of stack a is bigger than the second one, do "sa".
+	  every step is done when the input numbers are 4.
+
+sort_len_5()
+	- sort the stack a when the input numbers are 5.
+	- since the input number 5 is long, i'm gonna split it to 3 and 2.
+	  i'll find the maximum and minimum number and put them in stack b
+	  then stack a will have 3 numbers and stack b will have 2 numbers.
+	  (i can check the length of stack a using ft_get_stack_len())
+	- until i get both of maximum and minimum number, i'm gonna do "ra" to find them.
+	  (i can find the max and min number using ft_min_data() and ft_max_data())
+	  whenever i find them, i'll do "pb" to put it in the stack b.
+	  after finding both of max and min number, cnt_op_pb is 2.
+	- now, i'll sort the stack a which has only 3 number in it.
+		* if the numbers in stack a is descending order, reverse stack a
+		  using reverse_stack_a().
+		* if the numbers in stack a is not sorted(if it's not ascending order),
+		  sort the numbers using sort_3().
+	- after sorting stack a, we need to put numbers inside stack b
+	  that are max and min number using pa_min_max() for cnt_op_pb(it is 2) times.
+	  (for example, if input is "3, 5, 2, 1, 4",
+	  do "ra" until maximum number(5) becomes the first number of stack a
+	  and then do "pb". now, the cnt_op_pb is 1.
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+	  	  3  |			  5  |			  2  |  5
+		  5  |		ra	  2  |		pb	  1  |
+		  2  |		->	  1  |		->	  4  |
+		  1  |			  4  |			  3  |
+		  4  |			  3  |
+	  do "ra" until minimum number(1) becomes the first number of stack a
+	  and then do "pb". now the cnt_op_pb is 2.
+	  	  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  2  |  5		  1  |  5		  4  |  1
+		  1  |		ra	  4  |		pb	  3  |  5
+		  4  |		->	  3  |		->	  2
+		  3	 |			  2  |
+	  because the numbers in the stack a are descending order,
+	  so sort using reverse_stack_a().
+							   a  |  b
+							 -----------
+		 -> after using	 	   2  |  1
+		  reverse_stack_a()	   3  |  5
+							   4  |
+	  since the cnt_op_pb is 2, go inside op_pa_min_max(). now cnt_op_pb is 1.
+	  the min_data is 1 and the first number in stack b is 1.
+	  so do "pa".
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  2  |  1	pa	  1  |  5
+		  3  |  5	->	  2
+		  4				  3
+		  				  4
+	  since the cnt_op_pb is 1, go inside op_pa_min_max(). now cnt_op_pb is 0.
+	  the min_data is 1 and the first number in stack b is 5.
+	  so do "pa" and "ra".
+	  	  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  5		  5  |			  1  |
+		  2  |		pa	  1  |		ra	  2  |
+		  3  |		->	  2  |		->	  3  |
+		  4				  3  |			  4  |
+		  				  4  |			  5  |
+	  )
+
+ft_get_stack_len()
+	- gets the length of stack using data of the stack.
+	- make variable named last_data and save the last data of the list.
+	- length starts with 1, and compare every element starts with second number
+	   with last_data.
+	  (for example, if "1, 2, 3, 4, 5" are in stack a,
+	  last_data is 5 and length starts with 1.
+	  compare 2 with 5(length 2) if they are same, and then 3 with 5(length 3),
+	  4 with 5(length 4), and 5 with 5(length 5))
+
+op_pa_min_max()
+	- if the first number in stack a is the minimum number, do "pa".
+	- if the first number in stack a is the maximum number, do "pa" and "ra".
+
+a_to_b()
+	-
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 18:37:38 by yhwang            #+#    #+#              #
-#    Updated: 2022/03/17 01:34:54 by yhwang           ###   ########.fr        #
+#    Updated: 2022/03/17 03:38:44 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ LIBFT = ft_atoi \
 		ft_putstr_fd \
 		ft_split \
 		ft_strchr \
+		ft_strcmp \
 		ft_strdup \
 		ft_striteri \
 		ft_strjoin \

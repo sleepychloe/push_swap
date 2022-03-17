@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/22 18:47:46 by yhwang            #+#    #+#             */
-/*   Updated: 2021/07/22 18:47:53 by yhwang           ###   ########.fr       */
+/*   Updated: 2022/03/17 03:08:39 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*ft_memset(void *dst, int c, size_t length)
 	while (i < length)
 	{
 		((unsigned char *)dst)[i] = (unsigned char)c;
-		 i++;
+		i++;
 	}
 	return (dst);
 }

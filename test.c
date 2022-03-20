@@ -6,7 +6,7 @@
 /*   By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 18:52:08 by yhwang            #+#    #+#             */
-/*   Updated: 2022/03/17 07:00:23 by yhwang           ###   ########.fr       */
+/*   Updated: 2022/03/20 23:59:42 by yhwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,18 @@ typedef struct	s_stack
 	struct	s_stack	*prev;
 	struct	s_stack	*next;
 }	t_stack;
+
+typedef struct	s_param
+{
+	int	pvt_less;
+	int	pvt_greater;
+	int	pvt_less_idx;
+	int	pvt_greater_idx;
+	int	cnt_op_ra;
+	int	cnt_op_rb;
+	int	cnt_op_pa;
+	int	cnt_op_pb;
+}	t_param;
 
 void	std_err(void)
 {
@@ -423,6 +435,228 @@ void	sort_len_5(t_stack  **a, t_stack **b)
 		sort_len_3(a, b);
 	while (cnt_op_pb-- > 0)
 		op_pa_min_max(a, b, min_data);
+}
+
+static int	*init_arr(t_stack *a, int len)
+{
+	int	*arr;
+	int	i;
+
+	arr = (int *)malloc(sizeof(int) * len);
+	if (arr == NULL)
+		std_err();
+	i = 0;
+	while (i < len)
+	{
+		arr[i] = a->data;
+		a = a->next;
+		i++;
+	}
+	return (arr);
+}
+
+static void	assign_pvt(int len, t_param *param, int *arr)
+{
+	int	i;
+	int	j;
+	int	cnt_less;
+
+	i = 0;
+	while(i < len)
+	{
+		j = 0;
+		cnt_less = 0;
+		while (j < len)
+		{
+			if (arr[i] > arr[j])
+				cnt_less++;
+			j++;
+		}
+		if (cnt_less == param->pvt_less_idx)
+			param->pvt_less = arr[i];
+		else if (cnt_less == param->pvt_greater_idx)
+			param->pvt_greater = arr[i];
+		i++;
+	}	
+}
+
+void	set_pvt(t_stack *a, int len, char flag_stack, t_param *param)
+{
+	int	*arr;
+	int	q;
+
+	arr = init_arr(a, len);
+	q = len / 3;
+	if (len % 3 == 2)
+		q++;
+	if (flag_stack == 'a')
+	{
+		param->pvt_less_idx = (len - 1) - (2 * q);
+		param->pvt_greater_idx = (len - 1) - q;
+	}
+	else if (flag_stack == 'b')
+	{
+		param->pvt_less_idx = q;
+		param->pvt_greater_idx = 2 * q;
+	}
+	assign_pvt(len, param, arr);
+	free(arr);
+	arr = NULL;
+}
+
+static void	divide_a(t_stack **a, t_stack **b, int len, t_param *param)
+{
+	while (len > 0)
+	{
+		if ((*a)->data <= param->pvt_less)
+		{
+			ft_do_operation("pb", a, b);
+			(param->cnt_op_pb)++;
+		}
+		else if ((*a)->data > param->pvt_greater)
+		{
+			ft_do_operation("ra", a, b);
+			(param->cnt_op_ra)++;
+		}
+		else
+		{
+			ft_do_operation("pb", a, b);
+			(param->cnt_op_pb)++;
+			ft_do_operation("rb", a, b);
+			(param->cnt_op_rb)++;
+		}
+		len--;
+	}
+}
+
+void	rewind_stack(t_stack **a, t_stack **b, int len)
+{
+	while (len > 0)
+	{
+		ft_do_operation("rrr", a, b);
+		len--;
+	}
+}
+
+static void	conquer_a(t_stack **a, t_stack **b, int len)
+{
+	if (len == 2 || len == 3)
+	{
+		if ((*a)->data > (*a)->next->data)
+			ft_do_operation("sa", a, b);
+		if (len == 3 && !ft_is_ascend(*a, len))
+		{
+			ft_do_operation("ra", a, b);
+			ft_do_operation("sa", a, b);
+			ft_do_operation("rra", a, b);
+			if ((*a)->data > (*a)->next->data)
+				ft_do_operation("sa", a, b);
+		}
+	}
+	else if (len == 4)
+		sort_len_4(a, b);
+	else if (len == 5)
+		sort_len_5(a, b);
+}
+
+void	divide_b(t_stack **a, t_stack **b, int len, t_param *param)
+{
+	while (len > 0)
+	{
+		if ((*b)->data >= param->pvt_greater)
+		{
+			ft_do_operation("pa", a, b);
+			(param->cnt_op_pa)++;
+		}
+		else if ((*b)->data < param->pvt_less)
+		{
+			ft_do_operation("rb", a, b);
+			(param->cnt_op_rb)++;
+		}
+		else
+		{
+			ft_do_operation("pa", a, b);
+			(param->cnt_op_pa)++;
+			ft_do_operation("ra", a, b);
+			(param->cnt_op_ra)++;
+		}
+		len--;
+	}
+}
+
+static void	conquer_b(t_stack **a, t_stack **b, int len)
+{
+	if (len == 2 || len == 3)
+	{
+		if ((*b)->data < (*b)->next->data)
+			ft_do_operation("sb", a, b);
+		if (len == 3)
+		{
+			if (!ft_is_descend(*b, len))
+			{
+				ft_do_operation("rb", a, b);
+				ft_do_operation("sb", a, b);
+				ft_do_operation("rrb", a, b);
+				if ((*b)->data < (*b)->next->data)
+					ft_do_operation("sb", a, b);
+			}
+			ft_do_operation("pa", a, b);
+		}
+		ft_do_operation("pa", a, b);
+	}
+	ft_do_operation("pa", a, b);
+}
+
+void	b_to_a(t_stack **a, t_stack **b, int len)
+{
+	t_param		param;
+
+	if (len <= 3)
+	{
+		conquer_b(a, b, len);
+		return ;
+	}
+	param.pvt_less_idx = 0;
+	param.pvt_greater_idx = 0;
+	param.pvt_less = 0;
+	param.pvt_greater = 0;
+	param.cnt_op_ra = 0;
+	param.cnt_op_rb = 0;
+	param.cnt_op_pa = 0;
+	param.cnt_op_pb = 0;
+	set_pvt(*b, len, 'b', &param);
+	divide_b(a, b, len, &param);
+	a_to_b(a, b, param.cnt_op_pa - param.cnt_op_ra);
+	rewind_stack(a, b, param.cnt_op_ra);
+	a_to_b(a, b, param.cnt_op_ra);
+	b_to_a(a, b, param.cnt_op_rb);
+
+}
+
+void	a_to_b(t_stack **a, t_stack **b, int len)
+{
+	t_param		param;
+
+	if (len <= 5)
+	{
+		if (!ft_is_ascend(*a, len))
+			conquer_a(a, b, len);
+		return ;
+	}
+	param.pvt_less_idx = 0;
+	param.pvt_greater_idx = 0;
+	param.pvt_less = 0;
+	param.pvt_greater = 0;
+	param.cnt_op_ra = 0;
+	param.cnt_op_rb = 0;
+	param.cnt_op_pa = 0;
+	param.cnt_op_pb = 0;
+	set_pvt(*a, len, 'a', &param);
+	divide_a(a, b, len, &param);
+	rewind_stack(a, b, param.cnt_op_rb);
+	a_to_b(a, b, param.cnt_op_ra);
+	b_to_a(a, b, param.cnt_op_rb);
+	b_to_a(a, b, param.cnt_op_pb - param.cnt_op_rb);
 }
 
 void	sort(t_stack **a, t_stack **b, int len)

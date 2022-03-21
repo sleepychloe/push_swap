@@ -1,0 +1,775 @@
+main
+	<parsing>
+	- if argc is 1(there's no argument), return (0).
+	- counts the number of the input using ft_count_len().
+	- makes stacks and put the value of the input inside stack a
+	  using init_stack().
+	- checks if the input has duplicate number using check_duplicate().
+	<sorting>
+	- i'll use different way to sort the stack
+	  when the input is descending order(len >= 2 && ft_is_descend())
+	  and other cases(len >= 3 && !ft_is_ascend() -> the reason why len >= 3
+	  : when the number is 2 and if it is not descending order,
+	  it is already sorted)
+	  using ft_is_descend(), ft_is_ascend(), reverse_stack_a(), and sort_by_len().
+	- when the stack a is already sorted, it doens't go inside the if or else if.
+
+********** parsing **********
+
+ft_count_len()
+	- counts the number of the input.
+	- if the input is <<./a.out 9 2 "2 -2 0" 3 1>>, the length is 7.
+
+init_stack()
+	- initalizes the stack a and b to NULL.
+	- changes the value of the input to int using ft_modified_atoi()
+	- makes new nodes with each argument and appends them to stack a
+	  using create_new_node() and append_new_node()
+
+ft_modified_atoi()
+	- changes the value of the input to char to int(applies to each arg).
+	- the logic is same as ft_atoi() in libft but this is simpler.
+	- error msg will be printed
+	  when the input number is less than INT_MIN or bigger than INT_MAX.
+
+create_new_node()
+	- allocates memory(for each node).
+	- data is the result of ft_modified_atoi()(each arg that changed to int).
+	- prev and next is the node itself.
+	  (in case of the node is the head of the list)
+
+append_new_node()
+	- if the stack a is empty, new node becomes a head of the list.
+	- else, we need to change the prev and next.
+	- next address of the last node becomes new node.
+	- prev address of the new node becomes the last node of the origin list.
+	- prev address of the head becomes new node.
+	- next address of the new node becomes the head of the origin list.
+
+check_duplicate()
+	- checks if data of the head in the stack a has same data with others.
+	  (if the datas of stack a are "1, 2, 3, 4, 5, 6",
+	  compare 1 with 2, 3, 4, 5, 6
+	  //in this case, a->data is 1, curr->data is 2 and then 3, ...)
+	- checks if data of the next of the head in the stack a
+	  has same data with others.
+	  (if the datas of stack a are "1, 2, 3, 4, 5, 6",
+	  compares 2 with 3, 4, 5, 6)
+	- check if any data has same data with others.
+	  (if the datas of stack a are "1, 2, 3, 4, 5, 6", compare 3 with 4, 5, 6
+	  and then compare 4 with 5,6
+	  and then compare 5 with 6)
+	- error msg will be printed when a->data and curr->data is same
+
+********** operating **********
+
+ft_operation_s()
+	- checks if i can swap the first 2 elements at the top of the stack.
+	- ft_operation_s() is for conducting "sa", "sb", and "ss".
+
+ft_operation_p()
+	- checks if i can take the first element at the top of source stack
+	  (using ft_take_node()), and put it at the top of destination stack.
+	- ft_operation_p() is for conducting "pa", and "pb".
+	- if the destination stack is empty, taken_node that have already taken
+	  from source becomes a head of the destination list.
+	- else, we need to change the prev and next.
+		* next address of the last node becomes taken_node.
+		* prev address of the taken_node becomes the last node of the origin list.
+		* prev address of the head becomes taken_node.
+		* next address of the taken_node becomes the head of the origin list.
+	- and then taken_node becomes the head of the destination stack.
+
+ft_take_node()
+	- checks if i can take the first element at the top of source stack.
+	- the node i should take from the source stack is a head of the source stack.
+	- if the next address of head of the source stack is the head itself,
+	  it means the source stack had only 1 node and it will be empty
+	  after i take the node.
+	- when the source stack had more than 1 node, i need to change the prev and next.
+		* next address of the last node becomes the next node of head.
+		* prev address of the next node of head becomes the last node.
+		* the next of the head of the origin stack becomes a new head of source stack.
+	- after changing the prev and next,
+	  set the next and prev of the taken node to itself.
+	  (in case of the destination stack is empty)
+
+ft_operation_r()
+	- checks if i can shift up all elements of stack by 1.
+	- ft_operation_r() is for conducting "ra", "rb", and "rr".
+
+ft_operation_rr()
+	- checks if i can shift down all elements of stack by 1.
+	- ft_operation_rr() is for conducting "rra", "rrb", and "rrr".
+
+ft_do_operation()
+	- prints each step to sort the stack.
+	- print "sa" : when the string is "sa",
+				and when i can swap the first 2 elements at the top of the stack a.
+	- print "sb" : when the string is "sb",
+				and when i can swap the first 2 elements at the top of the stack b.
+	- print "ss" : when the string is "ss",
+				and when i can swap the first 2 elements at the top of the stack a, b.
+	- print "pa" : when the string is "pa",
+				and 
+	- print "pb" : when the string is "pb",
+				and 
+	- print "ra" : when the string is "ra",
+				and when i can shift up all elements of stack a by 1.
+	- print "rb" : when the string is "rb",
+				and when i can shift up all elements of stack b by 1.
+	- print "rr" : when the string is "rr",
+				and when i can shift up all elements of stack a, b by 1.
+	- print "rra" : when the string is "rra",
+				and when i can shift down all elements of stack a by 1.
+	- print "rrb" : when the string is "rrb",
+				and when i can shift down all elements of stack b by 1.
+	- print "rrr" : when the string is "rrr",
+				and when i can shift down all elements of stack a, b by 1.
+
+********** sorting **********
+
+ft_is_descend()
+	- checks if datas of stack a are descending order.
+	  (if the datas of stack a are "5, 4, 3, 2, 1",
+	  the function checks if 5 is bigger than 4, if 4 is bigger than 3,
+	  ..., if 2 is bigger than 1)
+
+reverse_stack()
+	- reverses the stack a.
+	- when the number of input is 2 and it is descending order, do "sa".
+	  (for example, if the input is "2, 1",
+	  i just need to change the order of stack a using "sa")
+		  a  |  b		  a  |  b
+		-----------	sa	-----------
+		  2  |		->	  1  |
+		  1  |			  2  |
+	- when the number of input is 3, and it is descending order,
+	  do "sa" and "rra".
+	  (for example, if the input is "3, 2, 1",
+	  i'll do "sa" first to change the order of 3 and 2,
+	  and then do "rra" to put 1 to the top of the stack a)
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  3  |		sa	  2  |		rra	  1  |
+		  2  |		->	  3  |		->	  2  |
+		  1  |			  1  |			  3  |
+	- when the number of input is more than 3, do "pb" for (len - 1)times,
+	  and then do "pa" and "ra" until stack b is empty.
+	  (for example, if the example is "6, 5, 4, 3, 2, 1",
+	  i'll do "pb" 5 times so that stack a has only a.
+	  and then do "pa" and "ra" one by one until b is empty)
+		  a  |  b		  a  |  b
+		-----------		-----------
+		  6  |			  1  |  2
+		  5  |			     |  3
+		  4  |		sa*5	     |  4
+		  3  |		->	     |  5
+		  2  |			     |  6
+		  1  |
+	  ********************************************************************
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  2		  2  |  3		  1  |  3
+		     |  3	pa	  1  |  4	ra	  2  |  4
+		     |  4	->	     |  5	->	     |  5
+		     |  5		     |  6		     |  6
+		     |  6		
+	  ********************************************************************
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  3		  3  |  4		  1  |  4
+		  2  |  4	pa	  1  |  5	ra	  2  |  5
+		     |  5	->	  2  |  6	->	  3  |  6
+		     |  6		
+	  ********************************************************************
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  4		  4  |  5  		  1  |  5
+		  2  |  5	pa	  1  |  6	ra	  2  |  6
+		  3  |  6	->	  2  |		->	  3  |
+					  3  |			  4  |
+	  ********************************************************************
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  5		  5  |  6		  1  |  6
+		  2  |  6	pa	  1  |		ra	  2
+		  3  |		->	  2  |		->	  3
+		  4  |			  3  |			  4
+					  4  |			  5
+	  ********************************************************************
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  6		  6  |			  1  |
+		  2  |		pa	  1  |		ra	  2  |
+		  3  |		->	  2  |		->	  3  |
+		  4  |			  3  |			  4  |
+		  5  |			  4  |			  5  |
+					  5  |			  6  |
+ft_is_ascend()
+	- checks if datas of stack a are ascending order.
+	  (if the datas of stack a are "1, 2, 3, 4, 5",
+	  the function checks if 1 is less than 2, if 2 is less than 3,
+	  ..., if 4 is less than 5)
+
+sort()
+	- i'll use "quick sort" to sort the stack.
+	- if there are not that many numbers to sort
+	  or the numbers are descending order,
+	  it will take pretty long time to sort the stack using quick sort.
+	- that's why i decided to use different way to sort
+	  when the input numbers are descending order.
+	- with this reason, i'll use different way
+	  when the length of the input is 3, 4, or 5
+	  using sort_len_3(), sort_len_4(), and sort_len_5()(don'tuse quick sort in these cases).
+	- when the length of the input is more than 5, go inside quick_sort_a_to_b()(use quick sort).
+
+sort_len_3()
+	- sort the stack a when the input numbers are 3.
+	- since 3! = 6, the number of every case when the input numbers are 3 is 6.
+	- every case is,	[01] 1, 2, 3 -> ascending order(nothing to sort)
+				[02] 1, 3, 2
+				[03] 2, 1, 3
+				[04] 2, 3, 1
+				[05] 3, 1, 2
+				[06] 3, 2, 1 -> descending order(already sorted in the main)
+	- if the head of the stack a is the minimum number(using ft_min_data())
+	  in the input, do "sa" and "ra".
+	  (for example, if the input is "1, 3, 2", i'll do "sa" and "ra")
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |		sa	  3  |		ra	  1  |
+		  3  |		->	  1  |		->	  2  |
+		  2  |			  2  |			  3  |
+	- if the head of the stack a is the maximum number(using ft_max_data())
+	  in the input, do "ra".
+	  (for example, if the input is "3, 1, 2", i'll do "ra")
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  3  |		ra	  1  |
+		  1  |		->	  2  |
+		  2  |			  3  |
+	- if the second number of the input is the minimum number(using ft_min_data())
+	  in the input, do "sa".
+	  (for example, if the input is "2, 1, 3", i'll do "sa")
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  2  |		sa	  1  |
+		  1  |		->	  2  |
+		  3  |			  3  |
+	- if the second number of the input is the maximum number in the input,
+	  do "rra".
+	  (for example, if the input is "2, 3, 1", i'll do "rra")
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  2  |		rra	  1  |
+		  3  |		->	  2  |
+		  1  |			  3  |
+
+ft_min_data()
+	- finds out the minimum number of the input.
+	- let's say the min_data of the input is inside the head of the list.
+	- compare data of the head with the next data.
+	  if the next data of the head is less than the min_data,
+	  min_data will be changed to it.
+	- repeat until the end and return the min_data.
+
+ft_max_data()
+	- finds out the maximum number of the input.
+	- let's say the max_data of the input is inside the head of the list.
+	- compare data of the head with the next data.
+	  if the next data of the head is bigger than max_data,
+	  max_data will be changed to it.
+	- repeat until the end and return the max_data.
+
+sort_len_4()
+	- sort the stack a when the input numbers are 4.
+	- since 4! = 24, the number of every case when the input numbers are 4 is 24.
+	- every case is,	[01] 1, 2, 3, 4 -> ascending order(nothing to sort)
+				[02] 1, 2, 4, 3
+				[03] 1, 3, 2, 4
+				[04] 1, 3, 4, 2
+				[05] 1, 4, 2, 3
+				[06] 1, 4, 3, 2
+				[07] 2, 1, 3, 4
+				[08] 2, 1, 4, 3
+				[09] 2, 3, 1, 4
+				[10] 2, 3, 4, 1
+				[11] 2, 4, 1, 3
+				[12] 2, 4, 3, 1
+				[13] 3, 1, 2, 4
+				[14] 3, 1, 4, 2
+				[15] 3, 2, 1, 4
+				[16] 3, 2, 4, 1
+				[17] 3, 4, 1, 2
+				[18] 3, 4, 2, 1
+				[19] 4, 1, 2, 3
+				[20] 4, 1, 3, 2
+				[21] 4, 2, 1, 3
+				[22] 4, 2, 3, 1
+				[23] 4, 3, 1, 2
+				[24] 4, 3, 2, 1 -> descending order(already sorted in the main)
+	- i already mentioned that it'll take pretty much time to sort descending number
+	  using quick sort.
+	- so, the worst case to sort is when there are continuous 3 descending numbers.
+	([06] 1, 4, 3, 2, [12] 2, 4, 3, 1, [18] 3, 4, 2, 1, and [23] 4, 3, 1, 2)
+	- let's check one of the worst case [23] 4, 3, 1, 2 with other cases.
+	  if the first number of stack a is bigger than the second number,
+	  do "sa" and "pb", and if it's not, just do "pb".
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  4  |		sa	  3  |		pb	  4  |  3
+		  3  |		->	  4  |		->	  1  |
+		  1  |			  1  |			  2  |
+		  2  |			  2  |			
+	  after this, there are 3 numbers in the stack a, and 1 number in the stack b.
+	  i'll send to one more number from stack a to stack b so do this step again.
+	  if the first number of stack a is bigger than the second number,
+	  do "sa" and "pb", and if it's not, just do "pb".
+	  	  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  4  |  3	sa	  1  |  3	pb	  4  |  1
+		  1  |		->	  4  |		->	  2  |  3
+		  2  |			  2  |
+	  after this, there are 2 numbers in the stack a, and 2 numbers in the stack b.
+	  now, i'm gonna move the numbers in the stack b to a.
+	  before this, we need to make the numbers inside stack a to ascending order,
+	  and the numbers inside stack b to descending order.
+	  	* if the first number of stack a is bigger than the second one,
+	  	  and the first number of stack b is less than the second one,
+	 	  i need to do "sa" and "sb" at the same time. and it is same as doing "ss".
+	  	* if the first number of stack a is bigger than the second one,
+	  	  and the numbers inside stack b is descending order,
+		  i need to do "sa".
+		* if the numbers inside stack a is ascending order,
+		  and the first number of stack b is less than the second one,
+		  i need to do "sb".
+		  a  |  b		  a  |  b
+		-----------		-----------
+		  4  |  1	ss	  2  |  3
+		  2  |  3	->	  4  |  1
+	  i can move the numbers inside stack b to stack a.
+	  after this step, there are 3 numbers in the stack a, and 1 number in the stack b.
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  2  |  3	pa	  3  |  1
+		  4  |  1	->	  2  |
+					  4  |
+	  before moving one more number inside stack b to a,
+	  if the first number of stack a is bigger than the second one, do "sa".
+		  a  |  b		  a  | 솟 b
+		-----------		-----------
+		  3  |  1	sa	  2  |  1
+		  2  |		->	  3  |
+		  4  |			  4  |
+	  now i can move the last one in the stack b to a by doing "pa".
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  2  |  1	pa	  1  |
+		  3  |		->	  2  |
+		  4  |			  3  |
+		  			  4  |
+	  if the first number of stack a is bigger than the second one, do "sa".
+	  every step is done when the input numbers are 4.
+
+sort_len_5()
+	- sort the stack a when the input numbers are 5.
+	- since the input number 5 is long, i'm gonna split it to 3 and 2.
+	  i'll find the maximum and minimum number and put them in stack b
+	  then stack a will have 3 numbers and stack b will have 2 numbers.
+	  (i can check the length of stack a using ft_get_stack_len())
+	- until i get both of maximum and minimum number, i'm gonna do "ra" to find them.
+	  (i can find the max and min number using ft_min_data() and ft_max_data())
+	  whenever i find them, i'll do "pb" to put it in the stack b.
+	  after finding both of max and min number, cnt_op_pb is 2.
+	- now, i'll sort the stack a which has only 3 number in it.
+		* if the numbers in stack a is descending order, reverse stack a
+		  using reverse_stack_a().
+		* if the numbers in stack a is not sorted(if it's not ascending order),
+		  sort the numbers using sort_3().
+	- after sorting stack a, we need to put numbers inside stack b
+	  that are max and min number using pa_min_max() for cnt_op_pb(it is 2) times.
+	  (for example, if input is "3, 5, 2, 1, 4",
+	  do "ra" until maximum number(5) becomes the first number of stack a
+	  and then do "pb". now, the cnt_op_pb is 1.
+		  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+	  	  3  |			  5  |			  2  |  5
+		  5  |		ra	  2  |		pb	  1  |
+		  2  |		->	  1  |		->	  4  |
+		  1  |			  4  |			  3  |
+		  4  |			  3  |
+	  do "ra" until minimum number(1) becomes the first number of stack a
+	  and then do "pb". now the cnt_op_pb is 2.
+	  	  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  2  |  5		  1  |  5		  4  |  1
+		  1  |		ra	  4  |		pb	  3  |  5
+		  4  |		->	  3  |		->	  2
+		  3  |			  2  |
+	  because the numbers in the stack a are descending order,
+	  so sort using reverse_stack_a().
+							   a  |  b
+							 -----------
+		 -> after using	 	 	 	   2  |  1
+		  reverse_stack_a()	   		   3  |  5
+							   4  |
+	  since the cnt_op_pb is 2, go inside op_pa_min_max(). now cnt_op_pb is 1.
+	  the min_data is 1 and the first number in stack b is 1.
+	  so do "pa".
+	  	  a  |  b		  a  |  b
+		-----------		-----------
+		  2  |  1	pa	  1  |  5
+		  3  |  5	->	  2
+		  4			  3
+		  			  4
+	  since the cnt_op_pb is 1, go inside op_pa_min_max(). now cnt_op_pb is 0.
+	  the min_data is 1 and the first number in stack b is 5.
+	  so do "pa" and "ra".
+	  	  a  |  b		  a  |  b		  a  |  b
+		-----------		-----------		-----------
+		  1  |  5		  5  |			  1  |
+		  2  |		pa	  1  |		ra	  2  |
+		  3  |		->	  2  |		->	  3  |
+		  4			  3  |			  4  |
+		  			  4  |			  5  |
+	  )
+
+ft_get_stack_len()
+	- gets the length of stack using data of the stack.
+	- make variable named last_data and save the last data of the list.
+	- length starts with 1, and compare every element starts with second number
+	   with last_data.
+	  (for example, if "1, 2, 3, 4, 5" are in stack a,
+	  last_data is 5 and length starts with 1.
+	  compare 2 with 5(length 2) if they are same, and then 3 with 5(length 3),
+	  4 with 5(length 4), and 5 with 5(length 5))
+
+operation_pa_min_max()
+	- if the first number in stack a is the minimum number, do "pa".
+	- if the first number in stack a is the maximum number, do "pa" and "ra".
+
+quick_sort_a_to_b()
+	- you have the input numbers that are not sorted at all in the stack a.
+	  i'll sort some of input numbers and then some numbers will go inside stack b from a.
+	- set 2 pivots that will be standard numbers for sorting random ordered numbers
+	  inside stack a(using set_pvt()).
+	- sorts some of numbers using the pivots(using divide_a()).
+	  (sort simply  1. same or smaller than small pivot -> move to the top of the stack b.
+				(case 1 = small)
+			2. bigger than big pivot -> keep them in the stack a.
+				(case 2 = big)
+			3. bigger than small pivot and same or smaller than big pivot
+			   -> move to the bottom of the stack b.
+				(case 3 = middle)
+	  -> after sorting, stack a has numbers of the case 2,
+	     and in the stack b, the numbers of the case 1 are located at the top of the stack b,
+	     the numbers of the case 3 are located at the bottom of the stack b.
+		   a   |   b
+		---------------
+		 case2 | case1
+		 (mid) |(small)
+		       | case3
+		       | (big)
+	- changes order of stack a and b using rewind_stack()
+	  to make the numbers of the case 3 are located at the top of the stack b
+	  and the numbers of the case 1 are located at the bottom of the stack b.
+	  (swich the location of numbers of the case 1 and 3)
+		   a   |   b
+		---------------
+		 case2 | case3
+		 (mid) | (big)
+		       | case1
+		       |(small)
+	- repeats this all step using quick_sort_a_to_b() until stack a has less than 6 numbers.
+	- if stack a has less than 6 number, sort stack a to ascending order using sort_a().
+	- now, i'm ready to sort stack b using quick_sort_b_to_a().
+
+set_pvt()
+	- before setting the pivots, i need to make an array whose values are the order of given stack.
+	- makes an array, and inializes it using init_arr().
+	- i'm gonna set 2 pivots. the one is located at 1/3 of the array,
+	  and the other is located at 2/3 of the array. so i can split the array to 3 spaces.
+	- to set 2 pivots, make a standeard named std_pvt, and then put len / 3 in it.
+	  if len % 3 == 2, do std_pvt++.
+	- when the given stack is stack a, 
+	  the index of the small pivot is (len - 1) - (2 * std_pvt)(-> locates around 1 / 3),
+	  and the index of the big pivot is (len - 1) - std_pvt(->locates around 2 / 3).
+		-> because the number of case 3(middle) and case 2(big) should be same later.
+	- when the given stack is stack b,
+	  the index of the small pivot is std_pvt(->locates around 1 / 3),
+	  and the index of the big pivot is 2 * std_pvt(->locates around 2 / 3).
+		-> because the number of case 1(small) and case 3(big) should be same later.
+	  (* when the length of the input is 9. and the given stack is a, the std_pvt is 3.
+		 index |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8
+	   small_pvt_idx is (9 - 1) - (2 * 3) = 2, and big_pvt_idx is (9 - 1) - 3 = 5.
+	   * when the length of the input is 9, and the given stack is b, the std_pvt is 3.
+	   small_pvt_idx is 3, and big_pvt_idx is 2 * 3 = 6.)
+	- i set index of each pivot, so now i need to adjust the values of them
+	  using assign_pvt().
+	- simply, assign_pvt() let me know if the number is the smallest number,
+	  or the second smallest, ..., or the biggest number.
+
+init_arr()
+	- allocates memory for an array using malloc function.
+	- puts the value to array using given stack.
+
+assign_pvt()
+	- declare a variable called cnt_less_than_std_num that counts every small number
+	  than standard number(it will change).
+	- it compares every number starts from i = 0 to the end of the array.
+	- "cnt_less_than_std_num is 0" means any number is not smaller than the standard,
+	  so it means the number is the smallest number in the array.
+	- "cnt_less_than_std_num is len - 1" means every number is smaller than the standard,
+	  so it means the number is the biggest number in the array.
+	- when cnt_less_than_std_num is same as small_pvt_idx, the standard number becomes small_pvt.
+	- when cnt_less_than_std_num is same as big_pvt_idx, the standard number becomes big_pvt.
+	(let's say the input is ("333 777 444 555 999 111 222 888 666")
+	 the length of the input is 9 and the given stack is a.
+	 small_pvt_idx is 2, and big_pvt_idx is 5.
+			|    index    |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8
+		  array |-------------------------------------------------------------------
+			|    value    | 333 | 777 | 444 | 555 | 999 | 111 | 222 | 888 | 666
+	 compare arr[i] and each array.
+		|	   i	      |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8 
+	 result |---------------------------------------------------------------------------
+		|cnt_less_than_std_num|  2  |  6  |  3  |  4  |  8  |  0  |  1  |  7  |  5
+	 when i = 0, cnt_less_than_std_num is 2(= small_pvt_idx).
+	 so, small_pvt is 333(= arr[0]).
+	 when i = 8, cnt_less_than_std_num is 5(= big_pvt_idx).
+	 so, big_pvt is 666(=arr[8]).
+	)
+
+divide_a()
+	- sorts numbers if they are (case 1) same or smaller than small pivot
+				    (case 2) bigger than big pivot
+				    (case 3) bigger than small pivot AND same or smaller than small pivot
+	- if the number is in the case 1, do "pb" and do cnt_op_pb++
+	  (it'll go to the top of the stack b).
+	- if the number is in the case 2, do "ra" and do cnt_op_ra++
+	  (it'll go to the bottom of the stack a).
+	- if the number is in the case 3, do "pb" and "rb" and do cnt_op_pb++, cnt_op_rb++
+	  (it'll go to the bottom of the stack b).
+	- numbers in the case 1 are in a group is consisted with small-size numbers,
+	  and numbers in the case 2 are in a group is consisted with middle-size numbers,
+	  and numbers in the case 3 are in a group is consisted with large-size numbers.
+	(let's say the input is ("333 777 444 555 999 111 222 888 666")
+	 the length of the input is 9 and the given stack is a.
+	 small pvt_idx is 2, and big_pvt_idx is 5.
+	 small_pvt is 333, and big_pvt is 666.
+	 sort every number -> case 1 : 333, 111, 222
+			      case 2 : 777, 999, 888
+			      case 3 : 444, 555, 666
+		   a  |  b		  a  |  b
+		 -----------		-----------	
+		  333 |			 777 | 222 -
+		  777 |			 999 | 111  |case1 
+		  444 |			 888 | 333 -
+		  555 |		  ->	     | 444 -
+		  999 |			     | 555  |case3
+		  111 |			     | 666 -
+		  222 |			
+		  888 |			
+		  666 |			
+	 )
+
+rewind_stack()
+	- changes order of stack b by doing "rrr".
+	  (to make the numbers of the case 3 are at the top of the stack b,
+	   the numbers of the case 1 are at the bottom of the stack b)
+		  a  |  b		  a  |  b
+		-----------		-----------
+		 777 | 222		 777 | 444
+		 999 | 111		 999 | 555
+		 888 | 333	->	 888 | 666
+		     | 444		     | 222
+		     | 555		     | 111
+		     | 666		     | 333
+
+quick_sort_b_to_a()
+	- you have the input numbers that are partially sorted in the stack a and b.
+	- in the stack a, the numbers are already sorted in ascending order.
+	- set 2 pivots that will be standard numbers for sorting numbers inside stack a
+	  using set_pvt().
+	- sorts some of numbers using the pivots(using divide_b()).
+	  (sort simply  1. same or bigger than big pivot -> move to the top of the stack a.
+				(case 1 = big)
+			2. smaller than small pivot -> keep them in the stack b.
+				(case 2 = small)
+			3. same or bigger than small pivot and smaller than big pivot
+			   -> move to the bottom of the stack a.
+				(case 3 = middle)
+	  -> after sorting, stack a has it's numbers that already sorted(same or less then 5 numbers)
+	     at the middle of stack a, and the numbers of the case 1(at the top) and 3(at the bottom).
+		   a   |   b
+		---------------
+		 case1 | case2
+		 (big) |(small)
+		sorted |
+		number |
+		 case3 |
+		 (mid) |
+	  )
+	- sort the case 1(big) in the stack a using quick_sort_a_to_b().
+		   a   |   b
+		---------------
+		sorted | case2
+		number |(small)
+		sorted |
+		number |
+		 case3 |
+		 (mid) |
+	- changes order of stack a and b using rewind_stack()
+	  to make the numbers of the case 3 are located at the top of the stack a.
+		   a   |   b
+		---------------
+		 case3 | case2
+		 (mid) |(small)
+		sorted |
+		number |
+		sorted |
+		number |
+	- sort the case 3(mid) in the stack a using quick_sort_a_to_b().
+		   a   |   b
+		---------------
+		sorted | case2
+		number |(small)
+		sorted |
+		number |
+		sorted |
+		number |
+	- repeats this all step using quick_sort_b_to_a() until stack b has less than 4 numbers.
+	- if stack b has less than 4 number, sort stack b and then push them to stack a
+	  using sort_b().
+
+divide_b()
+	- sorts numbers if they are (case 1) same or bigger than big pivot 
+				    (case 2) smaller than small pivot
+				    (case 3) same or bigger than small pivot AND smaller than big pivot
+	- if the number is in the case 1, do "pa" and do cnt_op_pa++
+	  (it'll go to the top of the stack a).
+	- if the number is in the case 2, do "rb" and do cnt_op_rb++
+	  (it'll go to the bottom of the stack b).
+	- if the number is in the case 3, do "pa" and "ra" and do cnt_op_pa++ and cnt_op_ra++
+	  (it'll go inside the bottom of the stack a).
+	- numbers in the case 1 are in a group is consisted with big-size numbers,
+	  and numbers in the case 2 are in a group is consisted with small-size numbers,
+	  and numbers in the case 3 are in a group is consisted with middle-size numbers.
+
+***** sorting example using quick sort*****
+
+* let's say the input is "9 -11 42 -444 99 96 -100 444 -4".
+the length of the input is 9.
+	  a  |  b	
+	-----------	
+	   9 |		
+	 -11 |		
+	  42 |		
+	-444 |		
+	  99 |		
+	  96 |		
+	-100 |		
+	 444 |		
+	  -4 |		
+
+* quick_sort_a_to_b()
+	- std_pvt = 9 / 3 = 3,
+	  small_pvt_idx = (9 - 1) - 2 * 3 = 2, big_pvt_idx = (9 - 1) - 3 = 5.
+		  index		|  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  
+	 -----------------------------------------------------------------------------
+	  	  value		|  9  | -11 |  42 | -444|  99 |  96 | -100| 444 |  -4
+ 	 -----------------------------------------------------------------------------
+	  cnt_less_than_std_num |  4  |  2  |  5  |  0  |  7  |  6  |  1  |  8  |  3  
+	- small_pvt = arr[1] = -11, big_pvt = arr[2] = 42.
+	- data <= small_pvt : -11, -444, -100
+	  data > big_pvt : 99, 96, 444
+	  small_pvt < data <= big_pvt : 9, 42, -4
+		    a  |  b
+		  -----------
+		    99 | -100
+		    96 | -444
+		   444 | -11
+		       |   9
+		       |  42
+		       |  -4
+	- rewind_stack()
+		    a  |  b  
+		  -----------
+		    99 |   9
+		    96 |  42
+		   444 |  -4
+		       | -100
+		       | -444
+		       | -11
+	- sort_a() in the quick_sort_a_to_b() in the quick_sort_a_to_b()
+		    a  |  b
+		  -----------
+		    96 |   9
+		    99 |  42
+		   444 |  -4
+		       | -100
+		       | -444
+		       | -11
+* qick_sort_b_to_a()
+	- set_pvt = 6 / 3 = 2,
+	  small_pvt_idx = 2, big_pvt_idx = 2 * 2 = 4.
+		  index		|  0  |  1  |  2  |  3  |  4  |  5
+	 -----------------------------------------------------------
+		  value		|  9  |  42 |  -4 | -100| -444| -11
+	 -----------------------------------------------------------
+	  cnt_less_than_std_num |  4  |  5  |  3  |  1  |  0  |  2
+	- small_pvt = arr[5] = -11, big_pvt = arr[0] = 9.
+	- data >= big_pvt : 9, 42
+	  data < small_pvt : -100, -444
+	  small_pvt <= data < big_pvt : -4, -11
+		    a  |  b
+		  -----------
+		    42 | -100
+		    9  | -444
+		    96 |
+		    99 |
+		   444 |
+		   -4  |
+		   -11 |
+	- sort_a() in the quick_sort_a_to_b() in the quick_sort_b_to_a()
+		    a  |  b
+		  -----------
+		    9  | -100
+		    42 | -444
+		    96 |
+		    99 |
+		   444 |
+		   -4  |
+		   -11 |
+	- rewind_stack()
+		    a  |  b
+		  -----------
+		    -4 | -100
+		   -11 | -444
+		    9  |
+		    42 |
+		    96 |
+		    99 |
+		   444 |
+	- sort_a() in the quick_sort_a_to_b() in the quick_sort_b_to_a()
+		    a  |  b
+		  -----------
+		   -11 | -100
+		    -4 | -444
+		    9  |
+		    42 |
+		    96 |
+		    99 |
+		   444 |
+	- sort_b() in the quick_sort_b_to_b() in the quick_sort_b_to_b()
+		    a  |  b
+		  -----------
+		  -444 |
+		  -100 |
+		   -11 |
+		    -4 |
+		    9  |
+		    42 |
+		    96 |
+		    99 |
+		   444 |

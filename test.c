@@ -92,7 +92,7 @@ int	ft_modified_atoi(const char *str)
 	return (nbr);
 }
 
-static t_stack	*create_new_node(int changed_to_int)
+t_stack	*create_new_node(int changed_to_int)
 {
 	t_stack		*new_node;
 

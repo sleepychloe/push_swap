@@ -221,18 +221,18 @@ sort()
 	  when the input numbers are descending order.
 	- with this reason, i'll use different way
 	  when the length of the input is 3, 4, or 5
-	  using sort_len_3(), sort_len_4(), and sort_len_5().
-	- when the length of the input is more than 5, go inside a_to_b().
+	  using sort_len_3(), sort_len_4(), and sort_len_5()(don'tuse quick sort in these cases).
+	- when the length of the input is more than 5, go inside a_to_b()(use quick sort).
 
 sort_len_3()
 	- sort the stack a when the input numbers are 3.
 	- since 3! = 6, the number of every case when the input numbers are 3 is 6.
 	- every case is,	[01] 1, 2, 3 -> ascending order(nothing to sort)
-						[02] 1, 3, 2
-						[03] 2, 1, 3
-						[04] 2, 3, 1
-						[05] 3, 1, 2
-						[06] 3, 2, 1 -> descending order(already sorted in the main)
+				[02] 1, 3, 2
+				[03] 2, 1, 3
+				[04] 2, 3, 1
+				[05] 3, 1, 2
+				[06] 3, 2, 1 -> descending order(already sorted in the main)
 	- if the head of the stack a is the minimum number(using ft_min_data())
 	  in the input, do "sa" and "ra".
 	  (for example, if the input is "1, 3, 2", i'll do "sa" and "ra")
@@ -286,29 +286,29 @@ sort_len_4()
 	- sort the stack a when the input numbers are 4.
 	- since 4! = 24, the number of every case when the input numbers are 4 is 24.
 	- every case is,	[01] 1, 2, 3, 4 -> ascending order(nothing to sort)
-						[02] 1, 2, 4, 3
-						[03] 1, 3, 2, 4
-						[04] 1, 3, 4, 2
-						[05] 1, 4, 2, 3
-						[06] 1, 4, 3, 2
-						[07] 2, 1, 3, 4
-						[08] 2, 1, 4, 3
-						[09] 2, 3, 1, 4
-						[10] 2, 3, 4, 1
-						[11] 2, 4, 1, 3
-						[12] 2, 4, 3, 1
-						[13] 3, 1, 2, 4
-						[14] 3, 1, 4, 2
-						[15] 3, 2, 1, 4
-						[16] 3, 2, 4, 1
-						[17] 3, 4, 1, 2
-						[18] 3, 4, 2, 1
-						[19] 4, 1, 2, 3
-						[20] 4, 1, 3, 2
-						[21] 4, 2, 1, 3
-						[22] 4, 2, 3, 1
-						[23] 4, 3, 1, 2
-						[24] 4, 3, 2, 1 -> descending order(already sorted in the main)
+				[02] 1, 2, 4, 3
+				[03] 1, 3, 2, 4
+				[04] 1, 3, 4, 2
+				[05] 1, 4, 2, 3
+				[06] 1, 4, 3, 2
+				[07] 2, 1, 3, 4
+				[08] 2, 1, 4, 3
+				[09] 2, 3, 1, 4
+				[10] 2, 3, 4, 1
+				[11] 2, 4, 1, 3
+				[12] 2, 4, 3, 1
+				[13] 3, 1, 2, 4
+				[14] 3, 1, 4, 2
+				[15] 3, 2, 1, 4
+				[16] 3, 2, 4, 1
+				[17] 3, 4, 1, 2
+				[18] 3, 4, 2, 1
+				[19] 4, 1, 2, 3
+				[20] 4, 1, 3, 2
+				[21] 4, 2, 1, 3
+				[22] 4, 2, 3, 1
+				[23] 4, 3, 1, 2
+				[24] 4, 3, 2, 1 -> descending order(already sorted in the main)
 	- i already mentioned that it'll take pretty much time to sort descending number
 	  using quick sort.
 	- so, the worst case to sort is when there are continuous 3 descending numbers.
@@ -354,10 +354,10 @@ sort_len_4()
 		-----------		-----------
 		  2  |  3	pa	  3  |  1
 		  4  |  1	->	  2  |
-					  4  |
+						  4  |
 	  before moving one more number inside stack b to a,
 	  if the first number of stack a is bigger than the second one, do "sa".
-		  a  |  b		  a  |  b
+		  a  |  b		  a  | 솟 b
 		-----------		-----------
 		  3  |  1	sa	  2  |  1
 		  2  |		->	  3  |
@@ -411,8 +411,8 @@ sort_len_5()
 	  so sort using reverse_stack_a().
 							   a  |  b
 							 -----------
-		 -> after using	 	 		   2  |  1
-		  reverse_stack_a()	 		   3  |  5
+		 -> after using	 	 	 	   2  |  1
+		  reverse_stack_a()	   		   3  |  5
 							   4  |
 	  since the cnt_op_pb is 2, go inside op_pa_min_max(). now cnt_op_pb is 1.
 	  the min_data is 1 and the first number in stack b is 1.
@@ -449,13 +449,228 @@ op_pa_min_max()
 	- if the first number in stack a is the minimum number, do "pa".
 	- if the first number in stack a is the maximum number, do "pa" and "ra".
 
-a_to_b()
-	-
+quick_sort_a_to_b()
+	- you have the input numbers that are not sorted at all in the stack a.
+	  i'll sort some of input numbers and then some numbers will go inside stack b from a.
+	- set 2 pivots that will be standard numbers for sorting random ordered numbers
+	  inside stack a(using set_pvt()).
+	- sorts some of numbers using the pivots(using divide_a()).
+	  (sort simply  1. same or smaller than small pivot -> move to the top of the stack b.
+				(case 1 = small)
+			2. bigger than big pivot -> keep them in the stack a.
+				(case 2 = big)
+			3. bigger than small pivot and same or smaller than big pivot
+			   -> move to the bottom of the stack b.
+				(case 3 = middle)
+	  -> after sorting, stack a has numbers of the case 2,
+	     and in the stack b, the numbers of the case 1 are located at the top of the stack b,
+	     the numbers of the case 3 are located at the bottom of the stack b.
+		   a   |   b
+		---------------
+		 case2 | case1
+		 (mid) |(small)
+		       | case3
+		       | (big)
+	- changes order of stack a and b using rewind_stack()
+	  to make the numbers of the case 3 are located at the top of the stack b
+	  and the numbers of the case 1 are located at the bottom of the stack b.
+	  (swich the location of numbers of the case 1 and 3)
+		   a   |   b
+		---------------
+		 case2 | case3
+		 (mid) | (big)
+		       | case1
+		       |(small)
+	- repeats this all step using quick_sort_a_to_b() until stack a has less than 6 numbers.
+	- if stack a has less than 6 number, sort stack a to ascending order using sort_a().
+	- now, i'm ready to sort stack b using quick_sort_b_to_a().
 
+set_pvt()
+	- before setting the pivots, i need to make an array whose values are the order of given stack.
+	- makes an array, and inializes it using init_arr().
+	- i'm gonna set 2 pivots. the one is located at 1/3 of the array,
+	  and the other is located at 2/3 of the array. so i can split the array to 3 spaces.
+	- to set 2 pivots, make a standeard named std_pvt, and then put len / 3 in it.
+	  if len % 3 == 2, do std_pvt++.
+	- when the given stack is stack a, 
+	  the index of the small pivot is (len - 1) - (2 * std_pvt)(-> locates around 1 / 3),
+	  and the index of the big pivot is (len - 1) - std_pvt(->locates around 2 / 3).
+		-> because the number of case 3(middle) and case 2(big) should be same later.
+	- when the given stack is stack b,
+	  the index of the small pivot is std_pvt(->locates around 1 / 3),
+	  and the index of the big pivot is 2 * std_pvt(->locates around 2 / 3).
+		-> because the number of case 1(small) and case 3(big) should be same later.
+	  (* when the length of the input is 9. and the given stack is a, the std_pvt is 3.
+		 index |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8
+	   small_pvt_idx is (9 - 1) - (2 * 3) = 2, and big_pvt_idx is (9 - 1) - 3 = 5.
+	   * when the length of the input is 9, and the given stack is b, the std_pvt is 3.
+	   small_pvt_idx is 3, and big_pvt_idx is 2 * 3 = 6.)
+	- i set index of each pivot, so now i need to adjust the values of them
+	  using assign_pvt().
+	- simply, assign_pvt() let me know if the number is the smallest number,
+	  or the second smallest, ..., or the biggest number.
 
+init_arr()
+	- allocates memory for an array using malloc function.
+	- puts the value to array using given stack.
 
+assign_pvt()
+	- declare a variable called cnt_less_than_std_num that counts every small number
+	  than standard number(it will change).
+	- it compares every number starts from i = 0 to the end of the array.
+	- "cnt_less_than_std_num is 0" means any number is not smaller than the standard,
+	  so it means the number is the smallest number in the array.
+	- "cnt_less_than_std_num is len - 1" means every number is smaller than the standard,
+	  so it means the number is the biggest number in the array.
+	- when cnt_less_than_std_num is same as small_pvt_idx, the standard number becomes small_pvt.
+	- when cnt_less_than_std_num is same as big_pvt_idx, the standard number becomes big_pvt.
+	(let's say the input is ("333 777 444 555 999 111 222 888 666")
+	 the length of the input is 9 and the given stack is a.
+	 small_pvt_idx is 2, and big_pvt_idx is 5.
+			|    index    |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8
+		  array |-------------------------------------------------------------------
+			|    value    | 333 | 777 | 444 | 555 | 999 | 111 | 222 | 888 | 666
+	 compare arr[i] and each array.
+		|	   i	      |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8 
+	 result |---------------------------------------------------------------------------
+		|cnt_less_than_std_num|  2  |  6  |  3  |  4  |  8  |  0  |  1  |  7  |  5
+	 when i = 0, cnt_less_than_std_num is 2(= small_pvt_idx).
+	 so, small_pvt is 333(= arr[0]).
+	 when i = 8, cnt_less_than_std_num is 5(= big_pvt_idx).
+	 so, big_pvt is 666(=arr[8]).
+	)
 
+divide_a()
+	- sorts numbers if they are (case 1) same or smaller than small pivot
+				    (case 2) bigger than big pivot
+				    (case 3) bigger than small pivot AND same or smaller than small pivot
+	- if the number is in the case 1, do "pb" and do cnt_op_pb++
+	  (it'll go to the top of the stack b).
+	- if the number is in the case 2, do "ra" and do cnt_op_ra++
+	  (it'll go to the bottom of the stack a).
+	- if the number is in the case 3, do "pb" and "rb" and do cnt_op_pb++, cnt_op_rb++
+	  (it'll go to the bottom of the stack b).
+	- numbers in the case 1 are in a group is consisted with small-size numbers,
+	  and numbers in the case 2 are in a group is consisted with middle-size numbers,
+	  and numbers in the case 3 are in a group is consisted with large-size numbers.
+	(let's say the input is ("333 777 444 555 999 111 222 888 666")
+	 the length of the input is 9 and the given stack is a.
+	 small pvt_idx is 2, and big_pvt_idx is 5.
+	 small_pvt is 333, and big_pvt is 666.
+	 sort every number -> case 1 : 333, 111, 222
+			      case 2 : 777, 999, 888
+			      case 3 : 444, 555, 666
+		   a  |  b		  a  |  b
+		 -----------		-----------	
+		  333 |			 777 | 222 -
+		  777 |			 999 | 111  |case1 
+		  444 |			 888 | 333 -
+		  555 |		  ->	     | 444 -
+		  999 |			     | 555  |case3
+		  111 |			     | 666 -
+		  222 |			
+		  888 |			
+		  666 |			
+	 )
 
+rewind_stack()
+	- changes order of stack b by doing "rrr".
+	  (to make the numbers of the case 3 are at the top of the stack b,
+	   the numbers of the case 1 are at the bottom of the stack b)
+		  a  |  b		  a  |  b
+		-----------		-----------
+		 777 | 222		 777 | 444
+		 999 | 111		 999 | 555
+		 888 | 333	->	 888 | 666
+		     | 444		     | 222
+		     | 555		     | 111
+		     | 666		     | 333
+
+quick_sort_b_to_a()
+	- you have the input numbers that are partially sorted in the stack a and b.
+	- in the stack a, the numbers are already sorted in ascending order.
+	- set 2 pivots that will be standard numbers for sorting numbers inside stack a
+	  using set_pvt().
+	- sorts some of numbers using the pivots(using divide_b()).
+	  (sort simply  1. same or bigger than big pivot -> move to the top of the stack a.
+				(case 1 = big)
+			2. smaller than small pivot -> keep them in the stack b.
+				(case 2 = small)
+			3. same or bigger than small pivot and smaller than big pivot
+			   -> move to the bottom of the stack a.
+				(case 3 = middle)
+	  -> after sorting, stack a has it's numbers that already sorted(same or less then 5 numbers)
+	     at the middle of stack a, and the numbers of the case 1(at the top) and 3(at the bottom).
+		   a   |   b
+		---------------
+		 case1 | case2
+		 (big) |(small)
+		sorted |
+		number |
+		 case3 |
+		 (mid) |
+	  )
+	- sort the case 1(big) in the stack a using quick_sort_a_to_b().
+		   a   |   b
+		---------------
+		sorted | case2
+		number |(small)
+		sorted |
+		number |
+		 case3 |
+		 (mid) |
+	- changes order of stack a and b using rewind_stack()
+	  to make the numbers of the case 3 are located at the top of the stack a.
+		   a   |   b
+		---------------
+		 case3 | case2
+		 (mid) |(small)
+		sorted |
+		number |
+		sorted |
+		number |
+	- sort the case 3(mid) in the stack a using quick_sort_a_to_b().
+		   a   |   b
+		---------------
+		sorted | case2
+		number |(small)
+		sorted |
+		number |
+		sorted |
+		number |
+	- repeats this all step using quick_sort_b_to_a() until stack b has less than 4 numbers.
+	- if stack b has less than 4 number, sort stack b and then push them to stack a
+	  using sort_b().
+
+divide_b()
+	- sorts numbers if they are (case 1) same or bigger than big pivot 
+				    (case 2) smaller than small pivot
+				    (case 3) same or bigger than small pivot AND smaller than big pivot
+	- if the number is in the case 1, do "pa" and do cnt_op_pa++
+	  (it'll go to the top of the stack a).
+	- if the number is in the case 2, do "rb" and do cnt_op_rb++
+	  (it'll go to the bottom of the stack b).
+	- if the number is in the case 3, do "pa" and "ra" and do cnt_op_pa++ and cnt_op_ra++
+	  (it'll go inside the bottom of the stack a).
+	- numbers in the case 1 are in a group is consisted with big-size numbers,
+	  and numbers in the case 2 are in a group is consisted with small-size numbers,
+	  and numbers in the case 3 are in a group is consisted with middle-size numbers.
+
+***** sorting example using quick sort*****
+
+let's say the input is "9 -11 42 -444 99 96 -100 444 -4".
+the length of the input is 9.
+	  a  |  b	
+	-----------	
+	   9 |		
+	 -11 |		
+	  42 |		
+	-444 |		
+	  99 |		
+	  96 |		
+	-100 |		
+	 444 |		
+	  -4 |		
 
 
 

@@ -35,7 +35,7 @@ int	ft_modified_atoi(const char *str)
 		str++;
 	}
 	nbr = sign * ret;
-	if (nbr < -2148483648 || nbr > 2147483647)
+	if (nbr < -2147483648 || nbr > 2147483647)
 		std_err();
 	return (nbr);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../incs/push_swap.h"
 
 int	ft_is_descend(t_stack *head, int len)
 {
@@ -83,7 +83,7 @@ int	ft_get_stack_len(t_stack *head)
 	return (stack_len);
 }
 
-static void	operation_pa_min_max(t_stack **a, t_stack **b, int min_data)
+void	operation_pa_min_max(t_stack **a, t_stack **b, int min_data)
 {
 	if ((*b)->data == min_data)
 		ft_do_operation("pa", a, b);

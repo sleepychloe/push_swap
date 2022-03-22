@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../incs/push_swap.h"
 
 int	ft_min_data(t_stack *head)
 {
@@ -48,7 +48,7 @@ int	ft_max_data(t_stack *head)
 	return (max_data);
 }
 
-static void	sort_len_3(t_stack **a, t_stack **b)
+void	sort_len_3(t_stack **a, t_stack **b)
 {
 	if ((*a)->data == ft_min_data(*a))
 	{

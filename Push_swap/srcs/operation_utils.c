@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../incs/push_swap.h"
 
-static int	ft_operation_s(t_stack *head)
+int	ft_operation_s(t_stack *head)
 {
 	int	temp;
 
@@ -53,13 +53,13 @@ int	ft_operation_p(t_stack **dest_stack_head, t_stack *taken_node)
 	return (1);
 }
 
-static int	ft_operation_r(t_stack **head)
+int	ft_operation_r(t_stack **head)
 {
 	*head = (*head)->next;
 	return (1);
 }
 
-static int	ft_operation_rr(t_stack **head)
+int	ft_operation_rr(t_stack **head)
 {
 	*head = (*head)->prev;
 	return (1);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../incs/push_swap.h"
 
 void	divide_b(t_stack **a, t_stack **b, int len, t_data_struct *data_struct)
 {
@@ -37,7 +37,7 @@ void	divide_b(t_stack **a, t_stack **b, int len, t_data_struct *data_struct)
 	}
 }
 
-static void	sort_b(t_stack **a, t_stack **b, int len)
+void	sort_b(t_stack **a, t_stack **b, int len)
 {
 	if (len == 2 || len == 3)
 	{

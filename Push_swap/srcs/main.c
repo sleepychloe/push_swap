@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../incs/push_swap.h"
 
 void	std_err(void)
 {
@@ -44,7 +44,7 @@ int	ft_count_len(char **argv)
 	return (len);
 }
 
-static void	check_duplicate(t_stack *a)
+void	check_duplicate(t_stack *a)
 {
 	t_stack	*last;
 	t_stack	*curr;

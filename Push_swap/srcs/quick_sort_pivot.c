@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../incs/push_swap.h"
 
-static int	*init_arr(t_stack *a, int len)
+int	*init_arr(t_stack *a, int len)
 {
 	int	*arr;
 	int	i;
@@ -30,7 +30,7 @@ static int	*init_arr(t_stack *a, int len)
 	return (arr);
 }
 
-static void	assign_pvt(int len, t_data_struct *data_struct, int *arr)
+void	assign_pvt(int len, t_data_struct *data_struct, int *arr)
 {
 	int	i;
 	int	j;

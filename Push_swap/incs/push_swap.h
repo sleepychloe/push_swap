@@ -38,36 +38,41 @@ typedef struct s_data_struct
 
 int			ft_modified_atoi(const char *str);
 t_stack		*create_new_node(int changed_to_int);
-static void	append_new_node(t_stack **a, t_stack *new_node);
-static void	init_stack(char **argv, t_stack **a, t_stack **b);
-static int	ft_operation_s(t_stack *head);
+void		append_new_node(t_stack **a, t_stack *new_node);
+void		init_stack(char **argv, t_stack **a, t_stack **b);
+int			ft_operation_s(t_stack *head);
 t_stack		*ft_take_node(t_stack **src_stack_head);
 int			ft_operation_p(t_stack **dest_stack_head, t_stack *taken_node);
-static int	ft_operation_r(t_stack **head);
-static int	ft_operation_rr(t_stack **head);
+int			ft_operation_r(t_stack **head);
+int			ft_operation_rr(t_stack **head);
 void		ft_do_operation(char *str, t_stack **a, t_stack **b);
 int			ft_min_data(t_stack *head);
 int			ft_max_data(t_stack *head);
-static void	sort_len_3(t_stack **a, t_stack **b);
+void		sort_len_3(t_stack **a, t_stack **b);
 void		sort_len_4(t_stack **a, t_stack **b);
 int			ft_is_descend(t_stack *head, int len);
 int			ft_is_ascend(t_stack *head, int len);
 void		reverse_stack_a(t_stack **a, t_stack **b, int len);
 int			ft_get_stack_len(t_stack *head);
-static void	operation_pa_min_max(t_stack **a, t_stack **b, int min_data);
+void		operation_pa_min_max(t_stack **a, t_stack **b, int min_data);
 void		sort_len_5(t_stack **a, t_stack **b);
-static int	*init_arr(t_stack *a, int len);
-static void	assign_pvt(int len, t_data_struct *data_struct, int *arr);
+int			*init_arr(t_stack *a, int len);
+void		assign_pvt(int len, t_data_struct *data_struct, int *arr);
 void		set_pvt(t_stack *a, int len, char stack_flag,
 				t_data_struct *data_struct);
-static void	divide_a(t_stack **a, t_static **b, int len,
+void		divide_a(t_stack **a, t_stack **b, int len,
 				t_data_struct *data_struct);
 void		rewind_stack(t_stack **a, t_stack **b, int len);
-static void	sort_a(t_stack **a, t_stack **b, int len);
+void		sort_a(t_stack **a, t_stack **b, int len);
 void		quick_sort_a_to_b(t_stack **a, t_stack **b, int len);
 void		divide_b(t_stack **a, t_stack **b, int len,
 				t_data_struct *data_struct);
-static void	sort_b(t_stack **a, t_static **b, int len);
+void		sort_b(t_stack **a, t_stack **b, int len);
 void		quick_sort_b_to_a(t_stack **a, t_stack **b, int len);
+void		std_err(void);
+int			ft_count_len(char **argv);
+void		check_cuplicate(t_stack *a);
+void		sort(t_stack **a, t_stack **b, int len);
+int			main(int argc, char **argv);
 
 #endif

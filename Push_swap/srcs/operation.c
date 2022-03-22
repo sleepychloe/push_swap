@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../incs/push_swap.h"
 
 void	ft_do_operation(char *str, t_stack **a, t_stack **b)
 {

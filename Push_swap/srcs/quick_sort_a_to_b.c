@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../incs/push_swap.h"
 
-static void	divide_a(t_stack **a, t_stack **b, int len,
+void	divide_a(t_stack **a, t_stack **b, int len,
 						t_data_struct *data_struct)
 {
 	while (len > 0)
@@ -47,7 +47,7 @@ void	rewind_stack(t_stack **a, t_stack **b, int len)
 	}
 }
 
-static void	sort_a(t_stack **a, t_stack **b, int len)
+void	sort_a(t_stack **a, t_stack **b, int len)
 {
 	if (len == 2 || len == 3)
 	{

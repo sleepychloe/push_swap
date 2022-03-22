@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../incs/push_swap.h"
 
 int	ft_modified_atoi(const char *str)
 {
@@ -53,7 +53,7 @@ t_stack	*create_new_node(int changed_to_int)
 	return (new_node);
 }
 
-static void	append_new_node(t_stack **a, t_stack *new_node)
+void	append_new_node(t_stack **a, t_stack *new_node)
 {
 	if (*a == NULL)
 		*a = new_node;
@@ -66,7 +66,7 @@ static void	append_new_node(t_stack **a, t_stack *new_node)
 	}
 }
 
-static void	init_stack(char **argv, t_stack **a, t_stack **b)
+void	init_stack(char **argv, t_stack **a, t_stack **b)
 {
 	int			changed_to_int;
 	t_stack		*new_node;

@@ -27,7 +27,7 @@ init_stack()
 	  using create_new_node() and append_new_node()
 
 ft_modified_atoi()
-	- changes the value of the input to char to int(applies to each arg).
+	- changes the value of the input from char to int(applies to each arg).
 	- the logic is same as ft_atoi() in libft but this is simpler.
 	- error msg will be printed
 	  when the input number is less than INT_MIN or bigger than INT_MAX.

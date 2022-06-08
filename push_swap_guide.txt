@@ -357,7 +357,7 @@ sort_len_4()
 					  4  |
 	  before moving one more number inside stack b to a,
 	  if the first number of stack a is bigger than the second one, do "sa".
-		  a  |  b		  a  | 솟 b
+		  a  |  b		  a  |  b
 		-----------		-----------
 		  3  |  1	sa	  2  |  1
 		  2  |		->	  3  |
@@ -411,7 +411,7 @@ sort_len_5()
 	  so sort using reverse_stack_a().
 							   a  |  b
 							 -----------
-		 -> after using	 	 	 	   2  |  1
+		 -> after using	 	 	   2  |  1
 		  reverse_stack_a()	   		   3  |  5
 							   4  |
 	  since the cnt_op_pb is 2, go inside op_pa_min_max(). now cnt_op_pb is 1.
@@ -560,8 +560,8 @@ divide_a()
 	 sort every number -> case 1 : 333, 111, 222
 			      case 2 : 777, 999, 888
 			      case 3 : 444, 555, 666
-		   a  |  b		  a  |  b
-		 -----------		-----------	
+		   a  |  b			  a  |  b
+		 -----------			-----------	
 		  333 |			 777 | 222 -
 		  777 |			 999 | 111  |case1 
 		  444 |			 888 | 333 -

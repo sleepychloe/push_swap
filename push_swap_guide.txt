@@ -411,7 +411,7 @@ sort_len_5()
 	  so sort using reverse_stack_a().
 							   a  |  b
 							 -----------
-		 -> after using	 	 	   2  |  1
+		 -> after using			   2  |  1
 		  reverse_stack_a()	   		   3  |  5
 							   4  |
 	  since the cnt_op_pb is 2, go inside op_pa_min_max(). now cnt_op_pb is 1.

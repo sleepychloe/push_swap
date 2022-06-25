@@ -6,7 +6,7 @@
 #    By: yhwang <yhwang@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 18:43:27 by yhwang            #+#    #+#              #
-#    Updated: 2022/03/22 14:05:22 by yhwang           ###   ########.fr        #
+#    Updated: 2022/06/25 23:44:16 by yhwang           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,7 @@ all: $(LIBFT_NAME) $(NAME)
 $(LIBFT_NAME):
 	make -C $(LIBFT_DIR)
 
-$(NAME): $(SRCS) $(LIBFT)
+$(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
